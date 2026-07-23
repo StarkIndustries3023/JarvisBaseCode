@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveModule;
@@ -46,9 +47,14 @@ public class HomeDrivetrainCommand extends Command {
             // For each module, check if the magnetic sensor is triggered. If it is, stop the module and set its angle to 0
             if (!moduleMagSensors[i].get()) {
                 modules[i].getAngleMotor().set(0);
-                SparkMax sparkObject = (SparkMax) modules[i].getAngleMotor().getMotor();
-                sparkObject.getEncoder().setPosition(getModuleOffset(i));
 
+                Object turnMotor = modules[i].getAngleMotor().getMotor();
+
+                if(turnMotor instanceof SparkMax sparkMax){
+                    sparkMax.getEncoder().setPosition(getModuleOffset(i));
+                } else {
+                    DriverStation.reportError("Angle Motor not set as SparkMax", false);
+                }
             }
         }
     }
