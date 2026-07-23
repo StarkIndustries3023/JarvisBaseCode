@@ -62,9 +62,6 @@ public class RobotContainer {
     m_driverController.start().onTrue(Commands.runOnce(drivebase::zeroGyro));
 
     m_driverController.back().whileTrue(homeDrivetrainCommand);
-
-    m_driverController.x().onTrue(Commands.runOnce(drivebase::resetDriveEncoders));
-    m_driverController.y().onTrue(Commands.runOnce(drivebase::useInternalFeedbackSensor));
   }
 
 

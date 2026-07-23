@@ -56,10 +56,6 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
     }
   
-    @Override
-    public void simulationPeriodic() {
-      // This method will be called once per scheduler run during simulation
-    }
   
     public SwerveDrive getSwerveDrive() {
       return swerveDrive;
@@ -77,14 +73,6 @@ public class SwerveSubsystem extends SubsystemBase {
   
     public void zeroGyro() {
       swerveDrive.zeroGyro();
-    }
-
-    public void resetDriveEncoders() {
-      swerveDrive.resetDriveEncoders();
-    }
-
-    public void useInternalFeedbackSensor() {
-      swerveDrive.useInternalFeedbackSensor();
     }
 
   /**
