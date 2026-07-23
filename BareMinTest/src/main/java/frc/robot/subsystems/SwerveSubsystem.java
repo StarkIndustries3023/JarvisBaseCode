@@ -57,20 +57,35 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   
   
+    /**
+     * @return Swerve Drive Object
+     */
     public SwerveDrive getSwerveDrive() {
       return swerveDrive;
     }
   
+    /**
+     * Field oriented drive method
+     * @param velocity Input chassis speeds
+     */
     public void driveFieldOriented(ChassisSpeeds velocity) {
       swerveDrive.driveFieldOriented(velocity);
     }
   
+    /**
+     * Field oriented drive command
+     * @param velocity Input ChassisSpeeds Supplier
+     * @return Drive Command
+     */
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
       return run(() -> {
         swerveDrive.driveFieldOriented(velocity.get());;
       });
     }
   
+    /**
+     * Resets gyro heading to 0
+     */
     public void zeroGyro() {
       swerveDrive.zeroGyro();
     }
