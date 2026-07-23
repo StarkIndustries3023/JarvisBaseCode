@@ -28,6 +28,8 @@ public class HomeDrivetrainCommand extends Command {
             swerveModule.getAngleMotor().set(Constants.HOMING_SPEED);
         }
 
+        System.out.println("Start Homing");
+
     }
 
     @Override
