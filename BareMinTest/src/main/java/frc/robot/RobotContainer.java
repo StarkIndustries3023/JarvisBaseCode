@@ -63,9 +63,6 @@ public class RobotContainer {
 
     m_driverController.back().whileTrue(homeDrivetrainCommand);
 
-    m_driverController.x().onTrue(Commands.runOnce(drivebase::resetDriveEncoders));
-    m_driverController.y().onTrue(Commands.runOnce(drivebase::useInternalFeedbackSensor));
-
     m_driverController.a().onTrue(Commands.runOnce(() -> System.out.println("A")));
   }
 
