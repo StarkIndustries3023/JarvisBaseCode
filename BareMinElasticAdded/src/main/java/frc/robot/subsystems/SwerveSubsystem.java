@@ -6,6 +6,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import swervelib.parser.SwerveParser;
@@ -33,6 +38,21 @@ public class SwerveSubsystem extends SubsystemBase {
       new DigitalInput(2),
       new DigitalInput(3)};
 
+  private final Boolean[] moduleHomeStatus = new Boolean[4];
+
+
+  private final NetworkTable swerveTable =
+    NetworkTableInstance.getDefault().getTable("Swerve");
+  
+  private final DoublePublisher xSpeedPub =
+    swerveTable.getDoubleTopic("XSpeed").publish();
+  private final DoublePublisher ySpeedPub =
+    swerveTable.getDoubleTopic("YSpeed").publish();
+  private final DoublePublisher headingPub =
+    swerveTable.getDoubleTopic("Heading").publish();
+  private final BooleanPublisher homeStatusPub = 
+    swerveTable.getBooleanTopic("Home Status").publish();
+  
 
     public SwerveSubsystem() {
 
@@ -54,6 +74,10 @@ public class SwerveSubsystem extends SubsystemBase {
   
     @Override
     public void periodic() {
+      xSpeedPub.set(swerveDrive.getRobotVelocity().vxMetersPerSecond);
+      ySpeedPub.set(swerveDrive.getRobotVelocity().vyMetersPerSecond);
+      headingPub.set(swerveDrive.getOdometryHeading().getDegrees());
+      homeStatusPub.set(allHomedStatus());
     }
   
   
@@ -108,5 +132,31 @@ public class SwerveSubsystem extends SubsystemBase {
     return !moduleMagSensors[i].get();
   }
 
+  /**
+   * Set Home status for a specific module
+   * @param status true for homed
+   * @param module module number
+   */
+  public void setHomeStatus(boolean status, int module){
+    moduleHomeStatus[module] = status;
+  }
+
+
+  /**
+   * Get an individual module's home status
+   * @param module module number
+   * @return true if module is homed
+   */
+  public boolean getModuleHomeStatus(int module){
+    return moduleHomeStatus[module];
+  }
+
+  /**
+   * Total home status of all modules
+   * @return true only if all modules are homed
+   */
+  public boolean allHomedStatus(){
+    return Arrays.stream(moduleHomeStatus).allMatch(b -> b);
+  }
 
 }
