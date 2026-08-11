@@ -20,6 +20,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import swervelib.parser.SwerveParser;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
@@ -52,6 +54,10 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveTable.getDoubleTopic("Heading").publish();
   private final BooleanPublisher homeStatusPub = 
     swerveTable.getBooleanTopic("Homed Status").publish();
+  private final DoublePublisher RawGyro = swerveTable.getDoubleTopic("RawGyro").publish();
+  private final DoublePublisher RawPigeon = swerveTable.getDoubleTopic("RawPigeon").publish();
+  private final DoublePublisher xPos = swerveTable.getDoubleTopic("xPos").publish();
+  private final DoublePublisher yPos = swerveTable.getDoubleTopic("yPos").publish();
   
 
     public SwerveSubsystem() {
@@ -78,6 +84,10 @@ public class SwerveSubsystem extends SubsystemBase {
       ySpeedPub.set(swerveDrive.getRobotVelocity().vyMetersPerSecond);
       headingPub.set(swerveDrive.getOdometryHeading().getDegrees());
       homeStatusPub.set(allHomedStatus());
+      RawGyro.set(swerveDrive.getGyroRotation3d().getAngle());
+    // don't know how to fix non-static reference problem  RawPigeon.set(Pigeon2.getRotation2d().getDegrees());
+      xPos.set(swerveDrive.getPose().getX());
+      yPos.set(swerveDrive.getPose().getY());
     }
   
   
