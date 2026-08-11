@@ -38,7 +38,7 @@ public class SwerveSubsystem extends SubsystemBase {
       new DigitalInput(2),
       new DigitalInput(3)};
 
-  private final Boolean[] moduleHomeStatus = new Boolean[4];
+  private final boolean[] moduleHomeStatus = new boolean[4];
 
 
   private final NetworkTable swerveTable =
@@ -155,8 +155,11 @@ public class SwerveSubsystem extends SubsystemBase {
    * Total home status of all modules
    * @return true only if all modules are homed
    */
-  public boolean allHomedStatus(){
-    return Arrays.stream(moduleHomeStatus).allMatch(b -> b);
-  }
+  public boolean allHomedStatus() {
+    for (boolean homed : moduleHomeStatus) {
+        if (!homed) return false;
+    }
+    return true;
+}
 
 }
