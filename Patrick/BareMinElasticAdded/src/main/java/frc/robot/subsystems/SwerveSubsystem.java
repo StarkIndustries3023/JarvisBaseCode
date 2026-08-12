@@ -85,7 +85,7 @@ public class SwerveSubsystem extends SubsystemBase {
       headingPub.set(swerveDrive.getOdometryHeading().getDegrees());
       homeStatusPub.set(allHomedStatus());
       RawGyro.set(swerveDrive.getGyroRotation3d().getAngle());
-    // don't know how to fix non-static reference problem  RawPigeon.set(Pigeon2.getRotation2d().getDegrees());
+      RawPigeon.set(swerveDrive.getGyro().getRotation3d().getZ());
       xPos.set(swerveDrive.getPose().getX());
       yPos.set(swerveDrive.getPose().getY());
     }
