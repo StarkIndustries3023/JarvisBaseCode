@@ -17,10 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.function.Supplier;
-
-import com.ctre.phoenix6.hardware.Pigeon2;
 
 import swervelib.parser.SwerveParser;
 import swervelib.SwerveDrive;
@@ -54,10 +51,14 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveTable.getDoubleTopic("Heading").publish();
   private final BooleanPublisher homeStatusPub = 
     swerveTable.getBooleanTopic("Homed Status").publish();
-  private final DoublePublisher RawGyro = swerveTable.getDoubleTopic("RawGyro").publish();
-  private final DoublePublisher RawPigeon = swerveTable.getDoubleTopic("RawPigeon").publish();
-  private final DoublePublisher xPos = swerveTable.getDoubleTopic("xPos").publish();
-  private final DoublePublisher yPos = swerveTable.getDoubleTopic("yPos").publish();
+  private final DoublePublisher RawGyro = 
+    swerveTable.getDoubleTopic("RawGyro").publish();
+  private final DoublePublisher RawPigeon = 
+    swerveTable.getDoubleTopic("RawPigeon").publish();
+  private final DoublePublisher xPos = 
+    swerveTable.getDoubleTopic("xPos").publish();
+  private final DoublePublisher yPos = 
+    swerveTable.getDoubleTopic("yPos").publish();
   
 
     public SwerveSubsystem() {
