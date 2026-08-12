@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.HomeDrivetrainCommand;
+import frc.robot.commands.Shoot;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,7 +29,9 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
+  private final Shooter shooter = new Shooter();
   private final HomeDrivetrainCommand homeDrivetrainCommand = new HomeDrivetrainCommand(drivebase);
+  private final Shoot shoot = new Shoot(shooter, m_driverController);
   // private final intakePosition intakePosition1;    // WIP for setting intake position
 
 
@@ -36,6 +40,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+    shooter.setDefaultCommand(shoot);
   }
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
