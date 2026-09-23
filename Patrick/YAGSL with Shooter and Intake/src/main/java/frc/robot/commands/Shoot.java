@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Shooter;
@@ -30,6 +31,7 @@ public class Shoot extends Command {
   @Override
   public void execute() {
     shooter.setMotorRpm(controller.getRightTriggerAxis() * ShooterConstants.maxRPM);
+    System.out.println("Shooter triggered");
   }
 
   // Called once the command ends or is interrupted.
@@ -39,6 +41,7 @@ public class Shoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println("Shooter untriggered");
     return false;
   }
 }

@@ -69,6 +69,9 @@ public class RobotContainer {
     m_driverController.back().whileTrue(homeDrivetrainCommand);
 
     m_driverController.a().onTrue(Commands.runOnce(() -> System.out.println("A")));
+
+    //creating temporary button to test setting shoot command, due to it being triggered by setting default to shoot
+    m_driverController.b().whileTrue(shoot);
   }
 
 

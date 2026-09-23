@@ -12,11 +12,27 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
+//adding table info for shooter output to elastic pjk 9/16/26
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.measure.AngularVelocity;
+
+import static edu.wpi.first.units.Units.RPM;
+
+import com.ctre.phoenix6.StatusSignal;
+
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
 
   TalonFX leftMotor = new TalonFX(10);
   TalonFX rightMotor = new TalonFX(15);
+
+  //adding table info for shooter output to elastic pjk 9/16/26
+   private final NetworkTable shooterTable =
+    NetworkTableInstance.getDefault().getTable("Shooter");
+    private final DoublePublisher shooterRPMPub =
+    shooterTable.getDoubleTopic("Shooter RPM").publish();
 
 
   public Shooter() {
@@ -40,11 +56,21 @@ public class Shooter extends SubsystemBase {
 
     rightMotor.getConfigurator().apply(rightConfig);
   }
+  
+  //adding table info for shooter output to elastic pjk 9/16/26
+  public double readMotorSpeed() {
+    StatusSignal<AngularVelocity> velocitySignal = leftMotor.getVelocity();
+    double rotationsPerSecond = velocitySignal.getValueAsDouble();
+    double rpm = rotationsPerSecond * 60.0;
+    return rpm;
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
+    //adding table info for shooter output to elastic pjk 9/16/26
+    shooterRPMPub.set(readMotorSpeed());
   }
 
   public void setMotorRpm(double rpm){

@@ -13,11 +13,11 @@ public final class Constants {
   }
 
   public final class ShooterConstants {
-    public static final int shooterP = 0;
-    public static final int shooterV = 0;
-    public static final int shooterS = 0;
+    public static final double shooterP = 0.1;
+    public static final double shooterV = 0.1;
+    public static final double shooterS = 0.1;
 
-    public static final double maxRPM = 500;
+    public static final double maxRPM = 3000;
   }
 
   public static final double MAX_SPEED = Units.feetToMeters(4);
