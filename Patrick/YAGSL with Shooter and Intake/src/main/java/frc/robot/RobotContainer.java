@@ -8,6 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.HomeDrivetrainCommand;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.Shooter;
+import frc.robot.commands.Index;
+import frc.robot.subsystems.Indexer;
+import frc.robot.commands.Intake;
+import frc.robot.subsystems.Intaker;
 import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +36,10 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final HomeDrivetrainCommand homeDrivetrainCommand = new HomeDrivetrainCommand(drivebase);
   private final Shoot shoot = new Shoot(shooter, m_driverController);
+  private final Indexer indexer = new Indexer();
+  private final Index index = new Index(indexer, m_driverController);
+  private final Intaker intaker = new Intaker();
+  private final Intake intake = new Intake(intaker);
   // private final intakePosition intakePosition1;    // WIP for setting intake position
 
 
@@ -41,6 +49,8 @@ public class RobotContainer {
     configureBindings();
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
     shooter.setDefaultCommand(shoot);
+    indexer.setDefaultCommand(index);
+    //intaker.setDefaultCommand(intake);
   }
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
@@ -72,6 +82,9 @@ public class RobotContainer {
 
     //creating temporary button to test setting shoot command, due to it being triggered by setting default to shoot
     m_driverController.b().whileTrue(shoot);
+    //creating temporary button to test setting index command
+    m_driverController.x().onTrue(intake);
+    //m_driverController.x().whileTrue(index);
   }
 
 

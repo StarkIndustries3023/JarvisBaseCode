@@ -9,17 +9,18 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Indexer extends SubsystemBase {
-  /** Creates a new Indexer. */
+public class Intaker extends SubsystemBase{
+    /** Creates a new Intaker. */
 
-  SparkMax indexerMotor = new SparkMax(11, MotorType.kBrushless);
-  SparkMaxConfig indexerConfig;
+  SparkMax intakerMotor = new SparkMax(13, MotorType.kBrushless);
+  SparkMaxConfig intakerConfig;
 
-  public Indexer() {
-    indexerConfig = new SparkMaxConfig();
-    indexerConfig
+  public Intaker() {
+    intakerConfig = new SparkMaxConfig();
+    intakerConfig
     .inverted(true)
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(38)
@@ -31,7 +32,7 @@ public class Indexer extends SubsystemBase {
   }
 
   public void setSpeed(double speed){
-    indexerMotor.set(speed);
+    intakerMotor.set(speed);
   }
 
 

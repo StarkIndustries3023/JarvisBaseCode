@@ -6,22 +6,23 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.Shooter;
+import frc.robot.Constants.IndexerConstants;
+import frc.robot.subsystems.Indexer;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Shoot extends Command {
-  Shooter shooter;
-  CommandXboxController controller;
-  /** Creates a new Shoot. */
-  public Shoot(Shooter shooter, CommandXboxController controller) {
+public class Index extends Command {
+    Indexer indexer;
+    CommandXboxController controller;
+
+  /** Creates a new Index. */
+  public Index(Indexer indexer, CommandXboxController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    addRequirements(indexer);
 
-    this.shooter = shooter;
+    this.indexer = indexer;
     this.controller = controller;
-  }
 
+    }
+    
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -29,8 +30,9 @@ public class Shoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setMotorRpm(controller.getRightTriggerAxis() * ShooterConstants.maxRPM);
-    //System.out.println("Shooter triggered");
+    indexer.setSpeed(controller.getLeftTriggerAxis() * 0.1);
+    //shooter.setMotorRpm(controller.getRightTriggerAxis() * ShooterConstants.maxRPM);
+    //System.out.println("Indexer triggered");
   }
 
   // Called once the command ends or is interrupted.
@@ -40,7 +42,8 @@ public class Shoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //System.out.println("Shooter untriggered");
+    //indexer.setSpeed(0);
+    //System.out.println("Indexer untriggered");
     return false;
   }
 }
