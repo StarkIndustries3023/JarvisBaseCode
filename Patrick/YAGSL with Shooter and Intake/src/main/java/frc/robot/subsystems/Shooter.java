@@ -29,10 +29,8 @@ public class Shooter extends SubsystemBase {
   TalonFX rightMotor = new TalonFX(15);
 
   //adding table info for shooter output to elastic pjk 9/16/26
-   private final NetworkTable shooterTable =
-    NetworkTableInstance.getDefault().getTable("Shooter");
-    private final DoublePublisher shooterRPMPub =
-    shooterTable.getDoubleTopic("Shooter RPM").publish();
+    private final NetworkTable shooterTable = NetworkTableInstance.getDefault().getTable("Shooter");
+    private final DoublePublisher shooterRPMPub = shooterTable.getDoubleTopic("Shooter RPM").publish();
 
 
   public Shooter() {

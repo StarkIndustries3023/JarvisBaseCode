@@ -42,6 +42,11 @@ public final class Constants {
     public static final double speed = 0.1;
   }
 
+  public final class IntakeAcutatorConstants {
+    public static final double retractedAngle = 0.0;
+    public static final double extendedAngle = 0.53;
+  }
+
   public static final double MAX_SPEED = Units.feetToMeters(4);
 
   public static final double HOMING_SPEED = 0.15;
