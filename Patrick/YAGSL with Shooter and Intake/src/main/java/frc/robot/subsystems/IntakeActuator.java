@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -45,11 +47,18 @@ public class IntakeActuator extends SubsystemBase{
     private BooleanPublisher retractedLimitPub = intakeTable.getBooleanTopic("Retracted Limit").publish();
     private DoublePublisher intakeActuatorAnglePub = intakeTable.getDoubleTopic("Intake Actuator Angle").publish();
     private DoublePublisher intakeActuatorAbsoluteAnglePub = intakeTable.getDoubleTopic("Intake Actuator Absolute Angle").publish();
+    private BooleanPublisher ifTriggeredOncePub = intakeTable.getBooleanTopic("Retract triggered once").publish();
+    private BooleanPublisher intakeActuatorHomedPub = intakeTable.getBooleanTopic("Intake Actuator Homed").publish();
+
 
     private double retractedAngle = 0.0;
     private double extendedAngle = .53;
 
+    private boolean intakeActuatorHomedState = false;
+
     private boolean currentIntakeState = false;
+
+    private boolean ifTriggeredOnce = false;
 
     double actuatorEncoderOffset = 0;
 
@@ -84,9 +93,12 @@ public class IntakeActuator extends SubsystemBase{
         // .forwardSoftLimit(actuatorEncoderOffset)
         // .reverseSoftLimitEnabled(true)
         // .forwardSoftLimitEnabled(true);
+        intakeActuatorConfig.closedLoop.p(4).i(0.0).d(.001);
         intakeActuatorConfig.closedLoop.maxMotion
-        .maxAcceleration(4)
-        .cruiseVelocity(45);
+        .maxAcceleration(2)
+        .cruiseVelocity(20);
+
+        intakeActuator.configure(intakeActuatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
 
     //SparkBaseSetter intakeActuatorSetter = new SparkBaseSetter(new SparkBaseSetter.SparkConfiguration(actuator, actuatorConfig));
@@ -114,14 +126,9 @@ public class IntakeActuator extends SubsystemBase{
     //intakeEndEffectorSetter.setPID(Constants.GAINS.INTAKE_MANIPULATOR);
     //PIDDisplay.PIDList.addOption("Intake End Efector", intakeEndEffectorSetter);
 
-    // Network tables
-    inst = NetworkTableInstance.getDefault();
-    intakeTable = inst.getTable("Elastic/Intake");
-    //lowerLimitPub = intakeTable.getBooleanTopic("Lower Limit").publish();
-    //upperLimitPub = intakeTable.getBooleanTopic("Upper Limit").publish();
-    intakeActuatorAnglePub = intakeTable.getDoubleTopic("Actuator angle").publish();
-    intakeActuatorAbsoluteAnglePub = intakeTable.getDoubleTopic("Actuator abs. angle").publish();
+
   }
+
   
   //#region Network Table Setters
 
@@ -130,6 +137,7 @@ public class IntakeActuator extends SubsystemBase{
   }
 
   public boolean getRetractedLimitState() {
+    setIfTriggeredOnce();
     return !retractedLimitSwitch.get();
   }
 
@@ -137,25 +145,57 @@ public class IntakeActuator extends SubsystemBase{
     return currentIntakeState;
   }
 
+   public void setIfTriggeredOnce(){
+    if(!retractedLimitSwitch.get())
+    ifTriggeredOnce = true;
+  }
+
+  //The following function may not be needed if the pub just sets intakeActuatorHomedState(its already boolean)
+  public boolean getIntakeActuatorHomedState(){ 
+    return intakeActuatorHomedState;
+  }
+
   public void setIntakeState(boolean newIntakeState){
     currentIntakeState = newIntakeState;
   }
 
   public double IntakeActuatorAngle() {
+    intakeActuatorAngle = intakeActuator.getEncoder().getPosition();
     return intakeActuatorAngle;
   }
 
   public double IntakeActuatorAbsoluteAngle() {
+    intakeActuatorAbsoluteAngle = intakeActuator.getAbsoluteEncoder().getPosition();
     return intakeActuatorAbsoluteAngle;
   }
   //#endregion
+
+  public void homeIntakeActuator(){
+    if(!intakeActuatorHomedState){
+      if(getRetractedLimitState()){
+      intakeActuator.getEncoder().setPosition(0.0);
+      System.out.println("Home Intake Actuator commmanded");
+      intakeActuatorHomedState = true;
+    } else {
+      System.out.println("Not Homed due to Retracted Limit Switch State false");
+    }
+    } else{
+      System.out.println("Found in homed state");
+    }
+    
+  }
 
   public void moveIntake(Rotation2d target){
      if(target.getRotations() > .55 || target.getRotations() < -0.5){   
       DriverStation.reportWarning("Invalid intake target: " + target, false);
       return;
+    } else {
+      if(intakeActuatorHomedState){
+         System.out.println("Acutuator Homed");
+         intakeActuatorController.setSetpoint(target.getRotations(), ControlType.kPosition);
+      }
+      System.out.println("Acutuator function called");
     }
-  intakeActuatorController.setSetpoint(target.getRotations(), ControlType.kPosition);
   }
   /* Here only for reference on building intake extension function.
 
@@ -188,13 +228,18 @@ public class IntakeActuator extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    setIntakeState(currentIntakeState);
 
     //adding table info for shooter output to elastic pjk 9/16/26
 
-    extendedLimitPub.set(false); //used to test elastic table
-    retractedLimitPub.set(true); //used to test elastic table, use next lines to display actual state pjk 10/5/26
+    extendedLimitPub.set(getExtendedLimitState()); 
+    retractedLimitPub.set( getRetractedLimitState()); 
     //extendedLimitPub.set(getExtendedLimitState());
     //retractedLimitPub.set(getRetractedLimitState());
+    intakeActuatorAnglePub.set(IntakeActuatorAngle());
+    intakeActuatorAbsoluteAnglePub.set(IntakeActuatorAbsoluteAngle());
+    ifTriggeredOncePub.set(ifTriggeredOnce);
+    intakeActuatorHomedPub.set(intakeActuatorHomedState);
   }
 
 }

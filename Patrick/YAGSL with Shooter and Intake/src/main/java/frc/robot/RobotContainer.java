@@ -43,7 +43,7 @@ public class RobotContainer {
   private final Intaker intaker = new Intaker();
   private final Intake intake = new Intake(intaker);
   private final IntakeActuator intakeActuator = new IntakeActuator();
-  private final IntakeActuate intakeActuate = new IntakeActuate(intakeActuator);
+  private final IntakeActuate intakeActuate = new IntakeActuate(intakeActuator,intaker);
   // private final intakePosition intakePosition1;    // WIP for setting intake position
 
 
