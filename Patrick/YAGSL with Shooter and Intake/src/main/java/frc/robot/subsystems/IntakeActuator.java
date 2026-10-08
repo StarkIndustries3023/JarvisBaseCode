@@ -33,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
-
+import frc.robot.commands.IntakeActuate;
 import frc.robot.subsystems.Intaker;
 
 public class IntakeActuator extends SubsystemBase{
@@ -51,10 +51,14 @@ public class IntakeActuator extends SubsystemBase{
     private BooleanPublisher intakeActuatorHomedPub = intakeTable.getBooleanTopic("Intake Actuator Homed").publish();
 
 
-    private double retractedAngle = 0.0;
-    private double extendedAngle = .53;
+    //private double retractedAngle = 0.0;
+    //private double extendedAngle = .53;
+    private double allowedError = 0.02;
 
     private boolean intakeActuatorHomedState = false;
+
+    boolean intakeActuatorAtExtendedAngle = false;
+    boolean intakeActuatorAtRetractedAngle = false;
 
     private boolean currentIntakeState = false;
 
@@ -93,9 +97,9 @@ public class IntakeActuator extends SubsystemBase{
         // .forwardSoftLimit(actuatorEncoderOffset)
         // .reverseSoftLimitEnabled(true)
         // .forwardSoftLimitEnabled(true);
-        intakeActuatorConfig.closedLoop.p(4).i(0.0).d(.001);
+        intakeActuatorConfig.closedLoop.p(3.5).i(0.0).d(.001);
         intakeActuatorConfig.closedLoop.maxMotion
-        .maxAcceleration(2)
+        .maxAcceleration(3)
         .cruiseVelocity(20);
 
         intakeActuator.configure(intakeActuatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -159,6 +163,27 @@ public class IntakeActuator extends SubsystemBase{
     currentIntakeState = newIntakeState;
   }
 
+  public boolean getIntakeActuatorAtExtendedAngle(){
+    if((Math.abs(intakeActuatorAngle - Constants.IntakeAcutatorConstants.extendedAngle)) <= allowedError){
+    intakeActuatorAtExtendedAngle = true;
+    }
+    else{
+      intakeActuatorAtExtendedAngle = false;
+    }
+    return intakeActuatorAtExtendedAngle;
+    
+  }
+  
+  public boolean getIntakeActuatorAtRetractedAngle(){
+    if((Math.abs(intakeActuatorAngle - Constants.IntakeAcutatorConstants.retractedAngle)) <= allowedError){
+      intakeActuatorAtRetractedAngle = true;
+    }
+    else{
+      intakeActuatorAtRetractedAngle = false;
+    }
+    return intakeActuatorAtRetractedAngle;
+  }
+
   public double IntakeActuatorAngle() {
     intakeActuatorAngle = intakeActuator.getEncoder().getPosition();
     return intakeActuatorAngle;
@@ -179,7 +204,8 @@ public class IntakeActuator extends SubsystemBase{
     } else {
       System.out.println("Not Homed due to Retracted Limit Switch State false");
     }
-    } else{
+    } 
+    else{
       System.out.println("Found in homed state");
     }
     
