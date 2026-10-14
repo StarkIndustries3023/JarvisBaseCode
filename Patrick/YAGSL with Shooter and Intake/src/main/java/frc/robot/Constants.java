@@ -44,7 +44,7 @@ public final class Constants {
 
   public final class IntakeAcutatorConstants {
     public static final double retractedAngle = 0.03;
-    public static final double extendedAngle = 0.47;
+    public static final double extendedAngle = 0.54;
   }
 
   public static final double MAX_SPEED = Units.feetToMeters(4);
