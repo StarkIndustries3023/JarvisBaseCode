@@ -13,9 +13,9 @@ public final class Constants {
   }
 
   public final class ShooterConstants {
-    public static final int shooterP = 0;
-    public static final int shooterV = 0;
-    public static final int shooterS = 0;
+    public static final double shooterP = 1/500;
+    public static final double shooterV = 1/500;
+    public static final double shooterS = 0;
 
     public static final double maxRPM = 500;
   }
