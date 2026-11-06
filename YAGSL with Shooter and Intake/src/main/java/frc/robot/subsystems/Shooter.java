@@ -18,6 +18,7 @@ public class Shooter extends SubsystemBase {
   TalonFX leftMotor = new TalonFX(10);
   TalonFX rightMotor = new TalonFX(15);
 
+  VelocityVoltage velocityvoltage = new VelocityVoltage(0);
 
   public Shooter() {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
@@ -48,8 +49,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setMotorRpm(double rpm){
-    leftMotor.setControl(new VelocityVoltage(rpm / 60));
-    rightMotor.setControl(new VelocityVoltage(rpm / 60));
+    leftMotor.setControl(velocityvoltage.withVelocity(rpm / 60));
+    rightMotor.setControl(velocityvoltage.withVelocity(rpm / 60));
+    System.out.println(rightMotor.getClosedLoopOutput().getValue());
   }
 
   public void stop(){
